@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>First Flask Application</title>
+</head>
+<body>
+<h1>Welcome to Madlibs using Flask</h1>	
+<form action="/final_madlib" method="post" name="final_madlib">
+	<h2>Enter a character name.</h2>
+	<input type="text" name="name" id="name">
+	<br/>
+	<br/>
+	<h2>Enter three adjectives.</h2>
+	<input type="text" name="adj1" id="adj1">
+	<input type="text" name="adj2" id="adj2">
+	<input type="text" name="adj3" id="adj3">
+	<br/>
+	<h2>Next enter three verbs.</h2>
+	<input type="text" name="verb1" id="verb1">
+	<input type="text" name="verb2" id="verb2">
+	<input type="text" name="verb3" id="verb3">	
+	<br/>
+	<h2>Next enter four nouns.</h2>
+	<input type="text" name="noun1" id="noun1">
+	<input type="text" name="noun2" id="noun2">
+	<input type="text" name="noun3" id="noun3">
+	<input type="text" name="noun4" id="noun4">
+	<br/>
+	<h2>Finally we need some 'weird' things.</h2>
+	<input type="text" name="animal" id="animal" value="animal">
+	<input type="text" name="food" id="food" value="food">
+	<input type="text" name="fruit" id="fruit" value="fruit">
+	<input type="text" name="number" id="number" value="number">
+	<input type="text" name="superhero" id="superhero" value="superhero">
+	<input type="text" name="year" id="year" value="year">
+	<input type="text" name="country" id="country" value="country">
+	<input type="text" name="dessert" id="dessert" value="dessert">
+	<br/>
+	<br/>
+	<input type="submit" name="Submit">
+</form>
+
+<!-- {% if name %}
+  <h2>Hello {{ name }}!</h2>
+{% else %}
+  <h2>Hello, World!</h2>
+{% endif %} -->
+</body>
+</html>
