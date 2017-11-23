@@ -1,15 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>First Flask Application</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 <h1>Here's your final story, enjoy!</h1>
 {% if story != "" %}
 <p>	{{story}}<p>
 {% else %}	
 <p>	No story!<p>
 {% endif %}	
-</body>
-</html>
-
+{% endblock %}
