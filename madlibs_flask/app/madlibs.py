@@ -1,35 +1,53 @@
 from app import app
-from flask_sqlalchemy import SQLAlchemy
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, session, abort
+import os
+from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import Markup
 from markupsafe import soft_unicode
 
 app.config.from_object('config')
-db = SQLAlchemy(app)
 
 from app import app
 from forms import LoginForm
+from models import User
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('index.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requested for OpenID="%s", remember_me=%s' %
-              (form.openid.data, str(form.remember_me.data)))
-        return redirect('/')
-    return render_template('login.html', 
-                           title='Sign In',
-                           form=form,
-                           providers=app.config['OPENID_PROVIDERS'])   
+@app.route('/login')
+def login():    
+    return index()  
+
+@app.route('/authenticate', methods = ['POST', 'GET']) 
+def authenticate():
+     
+    POST_USERNAME = str(request.form['username'])
+    POST_PASSWORD = str(request.form['password'])        
+    user = User.query.filter_by(username=POST_USERNAME).first()
+
+    if user is None:
+        flash('Wrong username!')
+    elif user.password == POST_PASSWORD:
+        session['logged_in'] = True
+        return madlib()
+    else:
+        flash('Wrong password!')
+    return index()    
+
+@app.route('/logout')
+def logout():
+    print "logout"
+    session['logged_in'] = False
+    return render_template('logout.html')
 
 @app.route('/madlib/')
-def hello(name="Poornima"):
-    return render_template('madlib.html', name=name)
+def madlib():
+    return render_template('madlib.html')
 
 def get_story(request):    
     character_name = request.form.get("name")

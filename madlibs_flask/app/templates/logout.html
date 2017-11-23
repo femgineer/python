@@ -2,9 +2,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if session['logged_in'] %}
-<p>You're logged in already!</p>
-{% else %}
+{% if session['logged_in'] == False%}
+<p>You're now logged out.</p>
 <form action="/authenticate" method="POST">
   <input type="username" name="username" placeholder="Username">
   <input type="password" name="password" placeholder="Password">
