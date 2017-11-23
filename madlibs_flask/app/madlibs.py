@@ -1,10 +1,11 @@
+from app import app
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, flash, redirect
 from flask import request
 from flask import Markup
 from markupsafe import soft_unicode
-from app import app
 
+app.config.from_object('config')
 db = SQLAlchemy(app)
 
 from app import app
