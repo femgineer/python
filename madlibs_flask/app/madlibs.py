@@ -5,6 +5,7 @@ import os
 from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import Markup
+from flask_bootstrap import Bootstrap
 from markupsafe import soft_unicode
 
 app.config.from_object('config')
