@@ -14,6 +14,7 @@ from forms import LoginForm
 from models import User
 
 def login_required(f):    
+    print "inside login_required"
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get('logged_in'):
@@ -45,6 +46,7 @@ def authenticate():
         flash('Wrong username!')
     elif user.password == POST_PASSWORD:
         session['logged_in'] = True
+        session['user_id'] = user.id
         return madlib()
     else:
         flash('Wrong password!')
@@ -73,11 +75,82 @@ def create_new_user():
         user = User(username = POST_USERNAME, password = POST_PASSWORD)
         db.session.add(user)
         db.session.commit()
+        #TODO: may want to move these two lines into a helper function
         session['logged_in'] = True
+        session['user_id'] = user.id
         return madlib()
     else:
         flash("Please enter a valid username and password.")
         return render_template('new_user.html')    
+
+@app.route('/user_profile')        
+@login_required
+def user_profile():        
+    # if the user has successfully logged in there should be a user_id
+    if session.get('user_id'):
+        id = session['user_id']
+        user = User.query.filter_by(id=id).first()
+        #TODO: this should not happen - remove once testing is complete
+        if user is None:
+            flash('Wrong user_id!')
+        else:
+            return render_template('user_profile.html', user=user)            
+    else: 
+        return index()    
+    
+
+@app.route('/edit_user_profile', methods = ['POST', 'GET'])        
+@login_required
+def edit_user_profile():    
+    print "inside edit_user_profile"
+    POST_USERNAME = str(request.form['username'])
+    print "username %s" % POST_USERNAME
+    POST_PASSWORD = str(request.form['password'])
+    print "password %s" % POST_PASSWORD
+    POST_NICKNAME = str(request.form['nickname'])            
+    print "nickname %s" % POST_NICKNAME
+    POST_EMAIL = str(request.form['email'])            
+    print "email %s" % POST_EMAIL
+
+    # if the user has successfully logged in there should be a user_id
+    user_id = session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    #TODO: this should not happen - remove once testing is complete
+    if user is None:
+        flash('Wrong user_id!')
+    else:
+        #TODO: this is a lot of DB queries, should optimize
+        if POST_USERNAME != user.username:
+            print "updating username %s" % POST_USERNAME
+            user.username = POST_USERNAME
+            db.session.add(user)
+            db.session.commit()
+        else:
+            print "did not update username because same %s" % POST_USERNAME
+        if POST_PASSWORD != user.password:
+            print "updating password %s" % POST_PASSWORD
+            user.password = POST_PASSWORD
+            db.session.add(user)
+            db.session.commit()
+        else:
+            print "did not update password because same or empty %s" % POST_PASSWORD        
+        if POST_NICKNAME != "" and (user.nickname is None or user.nickname == "" or user.nickname != POST_NICKNAME):
+            print "updating nickname %s" % POST_NICKNAME
+            user.nickname = POST_NICKNAME
+            db.session.add(user)
+            db.session.commit()
+        else:
+            print "did not update nickname because same or empty: %s" % POST_NICKNAME
+        if POST_EMAIL != "" and (user.email is None or user.email == "" or user.email != POST_EMAIL):
+            print "updating email %s" % POST_EMAIL
+            user.email = POST_EMAIL
+            db.session.add(user)
+            db.session.commit()
+        else:
+            print "did not update email because same %s" % POST_EMAIL
+
+    flash("Updated user profile.")
+    return render_template('user_profile.html', user=user)        
 
 # functionality below is for the actual madlibs game
 

@@ -1,0 +1,21 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/edit_user_profile" method="POST">
+  <label>Username</label><input type="username" name="username" value={{user.username}}><br/>
+  <!-- TODO: this should be encrypted -->
+  <label>Password</label><input type="password" name="password" value={{user.password}}><br/>
+  {% if user.nickname is not none %}  	
+  	<label>Nickname</label><input type="text" name="nickname" value={{user.nickname}}><br/>
+  {% else %}
+  	<label>Nickname</label><input type="text" name="nickname" value=""><br/>
+  {% endif %}	
+  {% if user.email is not none %}  	
+  	<label>Email</label><input type="text" name="email" value={{user.email}}><br/>
+  {% else %}
+  	<label>Email</label><input type="text" name="email" value=""><br/>
+  {% endif %}	  
+  <input type="submit" value="Save">
+</form>
+{% endblock %}
