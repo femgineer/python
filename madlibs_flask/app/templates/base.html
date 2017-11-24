@@ -7,9 +7,9 @@
     {% endif %}
   </head>
   <body>
-    <div><a href="/">Home</a></div>
-    <div><a href="/login">Login</a></div>
-    <div><a href="/logout">Logout</a></div>    
+    <h1>Welcome to Madlibs!</h1>
+
+    <div><a href="/">Home</a> | <a href="/login">Login</a> | <a href="/logout">Logout</a></div>    
     <hr>
     {% with messages = get_flashed_messages() %}
       {% if messages %}

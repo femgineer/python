@@ -1,4 +1,5 @@
 from app import app
+from functools import wraps
 from flask import render_template, flash, redirect, session, abort
 import os
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +12,16 @@ app.config.from_object('config')
 from app import app
 from forms import LoginForm
 from models import User
+
+def login_required(f):    
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('logged_in'):
+            return f(*args, **kwargs)
+        else:
+            flash('Please login to access this page.')
+            return login()
+    return decorated_function
 
 @app.route('/')
 def index():
@@ -40,12 +51,14 @@ def authenticate():
     return index()    
 
 @app.route('/logout')
+@login_required
 def logout():
-    print "logout"
-    session['logged_in'] = False
+    session.clear()
+    flash("You have been logged out.")
     return render_template('logout.html')
 
 @app.route('/madlib/')
+@login_required
 def madlib():
     return render_template('madlib.html')
 
@@ -75,6 +88,7 @@ def get_story(request):
     return story
     
 @app.route('/final_madlib', methods = ['POST', 'GET']) 
+@login_required
 def final_madlib():    
     story = get_story(request)
     
