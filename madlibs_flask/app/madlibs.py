@@ -5,7 +5,6 @@ import os
 from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import Markup
-from flask_bootstrap import Bootstrap
 from markupsafe import soft_unicode
 
 app.config.from_object('config')
@@ -14,8 +13,7 @@ from app import app
 from forms import LoginForm
 from models import User
 
-def login_required(f):    
-    print "inside login_required"
+def login_required(f):        
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get('logged_in'):
@@ -27,14 +25,11 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    if not session.get('logged_in'):
-        return render_template('login.html')
-    else:
-        return render_template('index.html')
+    return login()      
 
 @app.route('/login')
-def login():    
-    return index()  
+def login():        
+    return render_template('login.html', nbar='login')
 
 @app.route('/authenticate', methods = ['POST', 'GET']) 
 def authenticate():
@@ -58,13 +53,13 @@ def authenticate():
 def logout():
     session.clear()
     flash("You have been logged out.")
-    return render_template('logout.html')
+    return render_template('logout.html', nbar='logout')
 
 @app.route('/new_user')
 def new_user():    
     if session.get('logged_in'):
         flash("Please logout of your current user before creating a new one.")                
-    return render_template('new_user.html')
+    return render_template('new_user.html', nbar='new_user')
     
 
 @app.route('/create_new_user', methods = ['POST', 'GET'])
@@ -82,7 +77,7 @@ def create_new_user():
         return madlib()
     else:
         flash("Please enter a valid username and password.")
-        return render_template('new_user.html')    
+        return render_template('new_user.html', nbar='new_user')    
 
 @app.route('/user_profile')        
 @login_required
@@ -95,7 +90,7 @@ def user_profile():
         if user is None:
             flash('Wrong user_id!')
         else:
-            return render_template('user_profile.html', user=user)            
+            return render_template('user_profile.html', user=user, nbar='user_profile')            
     else: 
         return index()    
     
@@ -151,14 +146,14 @@ def edit_user_profile():
             print "did not update email because same %s" % POST_EMAIL
 
     flash("Updated user profile.")
-    return render_template('user_profile.html', user=user)        
+    return render_template('user_profile.html', user=user, nbar='user_profile')        
 
 # functionality below is for the actual madlibs game
 
 @app.route('/madlib/')
 @login_required
 def madlib():
-    return render_template('madlib.html')
+    return render_template('madlib.html', nbar='madlib')
 
 def get_story(request):    
     character_name = request.form.get("name")
@@ -190,4 +185,5 @@ def get_story(request):
 def final_madlib():    
     story = get_story(request)
     
+    #TODO: add a breadcrumb here
     return render_template('final_madlib.html', story=story) 

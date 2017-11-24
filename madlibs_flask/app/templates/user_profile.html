@@ -3,19 +3,40 @@
 
 {% block content %}
 <form action="/edit_user_profile" method="POST">
-  <label>Username</label><input type="username" name="username" value={{user.username}}><br/>
-  <!-- TODO: this should be encrypted -->
-  <label>Password</label><input type="password" name="password" value={{user.password}}><br/>
+
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1">Username</span>
+  <input type="text" class="form-control" aria-describedby="basic-addon1" value={{user.username}}>
+</div>
+
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1">Password</span>
+  <input type="password" class="form-control" aria-describedby="basic-addon1" value={{user.password}}>
+</div>
+
   {% if user.nickname is not none %}  	
-  	<label>Nickname</label><input type="text" name="nickname" value={{user.nickname}}><br/>
+	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon1">Nickname</span>
+  		<input type="text" class="form-control" aria-describedby="basic-addon1" value={{user.nickname}}>
+	</div>    	
   {% else %}
-  	<label>Nickname</label><input type="text" name="nickname" value=""><br/>
+  	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon1">Nickname</span>
+  		<input type="text" class="form-control" aria-describedby="basic-addon1" value="">
+	</div>    	  	
   {% endif %}	
   {% if user.email is not none %}  	
-  	<label>Email</label><input type="text" name="email" value={{user.email}}><br/>
+  	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon1">Email</span>
+  		<input type="text" class="form-control" aria-describedby="basic-addon1" value={{user.email}}>
+	</div>    	  	
   {% else %}
-  	<label>Email</label><input type="text" name="email" value=""><br/>
+  	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon1">Email</span>
+  		<input type="text" class="form-control" aria-describedby="basic-addon1" value="">
+	</div>    	  	
   {% endif %}	  
   <input type="submit" value="Save">
+</div>
 </form>
 {% endblock %}

@@ -8,22 +8,30 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
   </head>
-  <body>    
-    {% block navbar %}
-    <div class="navbar navbar-fixed-top">
-    <a href="/">Home</a> | <a href="/login">Login</a> | <a href="/logout">Logout</a> | <a href="/new_user">Create New User</a> | <a href="/user_profile">User Profile</a> 
+  <body>        
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">                
+          <li class="{% if nbar == 'login' %}active{% endif %}"><a href="/login">Login</a></li> 
+          <li class="{% if nbar == 'logout' %}active{% endif %}"><a href="/logout">Logout</a></li> 
+          <li class="{% if nbar == 'new_user' %}active{% endif %}"><a href="/new_user">Create New User</a></li>
+          <li class="{% if nbar == 'user_profile' %}active{% endif %}"><a href="/user_profile">User Profile</a></li>       
+        </ul> 
+       </div> 
+    </nav>    
+    
+    <div class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}        
+          
+          {% for message in messages %}
+              <div class="alert alert-warning fade in" role="alert">
+                <p>{{ message }}</p>
+              </div>            
+          {% endfor %}        
+        {% endif %}
+      {% endwith %}
     </div>  
-    {% endblock %}
-    <hr>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }} </li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
     <br/>
     <br/>
     {% block content %}{% endblock %}
