@@ -1,6 +1,6 @@
-from app import app
+from app import app, db
 from functools import wraps
-from flask import render_template, flash, redirect, session, abort
+from flask import render_template, flash, redirect, session, abort, g
 import os
 from sqlalchemy.orm import sessionmaker
 from flask import request
@@ -56,6 +56,30 @@ def logout():
     session.clear()
     flash("You have been logged out.")
     return render_template('logout.html')
+
+@app.route('/new_user')
+def new_user():    
+    if session.get('logged_in'):
+        flash("Please logout of your current user before creating a new one.")                
+    return render_template('new_user.html')
+    
+
+@app.route('/create_new_user', methods = ['POST', 'GET'])
+def create_new_user():    
+    POST_USERNAME = str(request.form['username'])
+    POST_PASSWORD = str(request.form['password'])            
+    #TODO: later on check that the username is not taken
+    if POST_USERNAME != "" and POST_PASSWORD != "":
+        user = User(username = POST_USERNAME, password = POST_PASSWORD)
+        db.session.add(user)
+        db.session.commit()
+        session['logged_in'] = True
+        return madlib()
+    else:
+        flash("Please enter a valid username and password.")
+        return render_template('new_user.html')    
+
+# functionality below is for the actual madlibs game
 
 @app.route('/madlib/')
 @login_required

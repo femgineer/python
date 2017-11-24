@@ -1,0 +1,10 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/create_new_user" method="POST">
+  <input type="username" name="username" placeholder="Username">
+  <input type="password" name="password" placeholder="Password">
+  <input type="submit" value="Log in">
+</form>
+{% endblock %}
